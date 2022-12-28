@@ -37,16 +37,16 @@ public class Application {
 
 
         System.out.println("Documents that are tagged by tag001:");
-        for (Document doc: documentRepository.findByTags(List.of("tag001"))) {
+        for (Document doc: documentRepository.findByTags(List.of("tag001"), 1, 10)) {
             System.out.println(doc);
         }
         System.out.println("Documents that are tagged by tag003 and tag007:");
-        for (Document doc: documentRepository.findByTags(List.of("tag003", "tag007"))) {
+        for (Document doc: documentRepository.findByTags(List.of("tag003", "tag007"), 1, 10)) {
             System.out.println(doc);
 
         }
         System.out.println("Documents that aren't tagged by tag007:");
-        for (Document doc: documentRepository.findByNotTags(List.of("tag007"))) {
+        for (Document doc: documentRepository.findByNotTags(List.of("tag007"), 1, 10)) {
             System.out.println(doc);
 
         }
