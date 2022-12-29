@@ -15,26 +15,33 @@ public class House {
         this.nFloors = nFloors;
     }
 
-    public void work() {
-        int nthFirst = firstLift.getCurrentFloor();
-        int nthSecond = secondLift.getCurrentFloor();
+    public void work() throws FloorNotFoundException {
         while (!tasks.isEmpty()) {
             Pair<Integer, Integer> task = tasks.poll();
-            Integer source = task.getFirst();
-            Integer destination = task.getSecond();
-            if (Math.abs(source - firstLift.getCurrentFloor()) < Math.abs(source - secondLift.getCurrentFloor())) {
-                firstLift.addTask(source);
-                firstLift.addTask(destination);
-                firstLift.setCurrentFloor(destination);
+            if (task.getFirst() > nFloors || task.getSecond() > nFloors) {
+                throw new FloorNotFoundException();
+            }
+            if (firstLift.getTasks().size() == secondLift.getTasks().size()) {
+                int floorOfFirstLift = firstLift.getTasks().isEmpty() ? firstLift.getFloor()
+                        : firstLift.getTasks().peek();
+                int floorOfSecondLift = secondLift.getTasks().isEmpty() ? secondLift.getFloor()
+                        : secondLift.getTasks().peek();
+                if (Math.abs(floorOfFirstLift - task.getFirst()) < Math.abs(floorOfSecondLift - task.getFirst())) {
+                    firstLift.getTasks().add(task.getFirst());
+                    firstLift.getTasks().add(task.getSecond());
+                } else {
+                    secondLift.getTasks().add(task.getFirst());
+                    secondLift.getTasks().add(task.getSecond());
+                }
+            } else if (firstLift.getTasks().size() < secondLift.getTasks().size()) {
+                firstLift.getTasks().add(task.getFirst());
+                firstLift.getTasks().add(task.getSecond());
             } else {
-                secondLift.addTask(source);
-                secondLift.addTask(destination);
-                secondLift.setCurrentFloor(destination);
+                secondLift.getTasks().add(task.getFirst());
+                secondLift.getTasks().add(task.getSecond());
             }
         }
-        firstLift.setCurrentFloor(nthFirst);
-        secondLift.setCurrentFloor(nthSecond);
-        firstLift.work();
-        secondLift.work();
+        firstLift.start();
+        secondLift.start();
     }
 }
