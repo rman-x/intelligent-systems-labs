@@ -25,10 +25,7 @@ public class LL1Parser {
                 k++;
             }
             Set<String> terminals = Set.of(parseTable.getValue("terminals", index).split("\\s+"));
-            if (token.matches("-?\\d+(\\.\\d+)?")) {
-                token = "numeric";
-            }
-            if (token.matches("^[_a-z]\\w*$") && !keywords.contains(token)) {
+            if ((token.matches("-?\\d+(\\.\\d+)?") || token.matches("^[_a-z]\\w*$")) && !keywords.contains(token)) {
                 token = "id";
             }
             if (terminals.contains(token)) {
