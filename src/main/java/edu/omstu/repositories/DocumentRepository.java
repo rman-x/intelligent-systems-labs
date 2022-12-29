@@ -47,19 +47,19 @@ public class DocumentRepository {
         }
     }
 
-    public List<Document> findByTags(List<String> tagNames, int page, int size) {
+    public List<Document> findByTags(List<String> tagNames, int page, int pageSize) {
         long bitset = getBitSetByTags(tagNames);
         List<Document> taggedDocs = entityManager
                 .createNativeQuery("SELECT * FROM Document WHERE (document.tags & :tags) != 0", Document.class)
-                .setParameter("tags", bitset).setFirstResult(page).setMaxResults(size).getResultList();
+                .setParameter("tags", bitset).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList();
         return taggedDocs;
     }
 
-    public List<Document> findByNotTags(List<String> tagNames, int page, int size) {
+    public List<Document> findByNotTags(List<String> tagNames, int page, int pageSize) {
         long bitset = getBitSetByTags(tagNames);
         List<Document> taggedDocs = entityManager
                 .createNativeQuery("SELECT * FROM Document WHERE (document.tags & :tags) = 0", Document.class)
-                .setParameter("tags", bitset).setFirstResult(page).setMaxResults(size).getResultList();
+                .setParameter("tags", bitset).setFirstResult((page - 1) * pageSize).setMaxResults(pageSize).getResultList();
         return taggedDocs;
     }
 
