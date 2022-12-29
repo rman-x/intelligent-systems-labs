@@ -51,17 +51,16 @@ public class DocumentRepository {
         long bitset = getBitSetByTags(tagNames);
         List<Document> taggedDocs = entityManager
                 .createNativeQuery("SELECT * FROM Document WHERE (document.tags & :tags) != 0", Document.class)
-                .setParameter("tags", bitset).getResultList();
-        return taggedDocs.subList(page, size);
+                .setParameter("tags", bitset).setFirstResult(page).setMaxResults(size).getResultList();
+        return taggedDocs;
     }
-
 
     public List<Document> findByNotTags(List<String> tagNames, int page, int size) {
         long bitset = getBitSetByTags(tagNames);
         List<Document> taggedDocs = entityManager
                 .createNativeQuery("SELECT * FROM Document WHERE (document.tags & :tags) = 0", Document.class)
-                .setParameter("tags", bitset).getResultList();
-        return taggedDocs.subList(page, size);
+                .setParameter("tags", bitset).setFirstResult(page).setMaxResults(size).getResultList();
+        return taggedDocs;
     }
 
     public Optional<Document> findById(int docId) {
